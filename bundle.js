@@ -170,8 +170,16 @@ class Game {
       }
     }
     if (this.nlines > 0) {
-      this.lines += this.nlines;
-      this.score.textContent = "Score: " + this.lines * 100;
+      if (this.nlines === 4) {
+        this.lines += ( this.nlines * 4 ) ;
+      } else if (this.nlines === 3) {
+        this.lines += ( this.nlines * 3 ) ;
+      } else if (this.nlines === 2) {
+        this.lines += ( this.nlines * 2 ) ;
+      } else {
+        this.lines += this.nlines;
+      }
+      this.score.textContent = "Score: " + this.lines * 50;
       this.drawBoard();
     }
   }
