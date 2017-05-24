@@ -1,0 +1,29 @@
+{
+  "name": "Tetris",
+  "version": "1.0.0",
+  "description": "## Background",
+  "main": "bundle.js",
+  "dependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "express": "^4.15.3",
+    "socket.io": "^2.0.1",
+    "webpack": "^2.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayellapragada/TetrisParty.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ayellapragada/TetrisParty/issues"
+  },
+  "homepage": "https://github.com/ayellapragada/TetrisParty#readme"
+}
