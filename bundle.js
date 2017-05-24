@@ -84,20 +84,21 @@ class Game {
     this.score = document.getElementById("score");
 
     this.width = 10;
-    this.height = 20;
+    this.height = 15;
     this.tilesz = 36;
 
     this.canvas.width = this.width * this.tilesz;
     this.canvas.height = this.height * this.tilesz;
 
     this.nlines = 0;
+    this.lines = 0;
     this.done = false;
-    this.dropStart = Date.now;
+    this.dropStart = Date.now();
     this.createEmptyBoard(this.height, this.width);
-    this.main = this.main.bind(this);
 
+    this.main = this.main.bind(this);
+    this.drawSquare = this.drawSquare.bind(this);
     this.removeFullLines = this.removeFullLines.bind(this);
-    this.newPiece = this.newPiece.bind(this);
 
     this.pieces = [
       [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["a" /* I */], "cyan"],
@@ -107,29 +108,34 @@ class Game {
       [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["e" /* S */], "green"],
       [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["f" /* T */], "purple"],
       [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["g" /* Z */], "red"] ];
+    document.addEventListener("keydown", this.handleKeyPress.bind(this));
   }
 
   start() {
     this.drawBoard();
-    this.newPiece();
+    this.piece = this.newPiece();
     this.main();
   }
 
   newPiece() {
     const p = this.pieces[parseInt(Math.random() * this.pieces.length, 10)];
-    return new __WEBPACK_IMPORTED_MODULE_0__piece_js__["a" /* default */](p[0], p[1], this.game);
+    return new __WEBPACK_IMPORTED_MODULE_0__piece_js__["a" /* default */](p[0], p[1], this);
   }
 
   main() {
     this.now = Date.now();
     this.delta = this.now - this.dropStart;
-    if (this.delta > 1000) {
+    if (this.delta > 700) {
       this.piece.down();
       this.dropStart = this.now;
     }
 
     if (!this.done) {
       requestAnimationFrame(this.main);
+    }
+
+    if (this.done) {
+      alert("Game Over!");
     }
   }
 
@@ -144,10 +150,11 @@ class Game {
   }
 
   removeFullLines() {
-    for (let y = 0; y < this.height; y ++) {
+    this.nlines = 0;
+    for (let y = 0; y < this.height; y++) {
       let line = true;
       for (let x = 0; x < this.width; x++) {
-        line = line && !this.board[y][x];
+        line = line && this.board[y][x];
       }
 
       if (line) {
@@ -162,11 +169,10 @@ class Game {
         this.nlines++;
       }
     }
-    let lines = 0;
     if (this.nlines > 0) {
-      lines += this.nlines;
+      this.lines += this.nlines;
+      this.score.textContent = "Score: " + this.lines * 100;
       this.drawBoard();
-      console.log(lines);
     }
   }
 
@@ -193,33 +199,28 @@ class Game {
     this.fs = this.ctx.fillStyle;
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
-        this.ctx.fillStyle = this.board[y][x] ? 'red' : 'white';
+        this.ctx.fillStyle = this.board[y][x] || 'white';
         this.drawSquare(x, y, this.tilesz, this.tilesz);
       }
     }
     this.ctx.fillStyle = this.fs;
   }
 
-  handleKeyPress() {
-    document.body.addEventListener("keypress", (e) => {
-      this.dropStart = Date.now;
-      if (e.keyCode === 38) {
-        this.piece.rotate();
-        this.dropStart = Date.now();
-      }
-      if (e.keyCode === 40) {
-        this.piece.down();
-      }
-      if (e.keyCode === 38) {
-        this.piece.moveLeft();
-        this.dropStart = Date.now();
-      }
-      if (e.keyCode === 39) {
-        this.piece.moveRight();
-        this.dropStart = Date.now();
-      }
+  handleKeyPress(e) {
+    if (e.keyCode === 38) {
+      this.piece.rotate();
+    }
+    if (e.keyCode === 40) {
+      this.dropStart = Date.now();
+      this.piece.down();
+    }
+    if (e.keyCode === 37) {
+      this.piece.moveLeft();
+    }
+    if (e.keyCode === 39) {
+      this.piece.moveRight();
+    }
 
-    }, false);
   }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Game;
@@ -260,10 +261,12 @@ class Piece {
 
     this.x = game.width/2 - parseInt(Math.ceil(this.pattern.length/2), 10);
     this.y = -2;
+    this.undraw = this.undraw.bind(this);
+    this.draw = this.draw.bind(this);
   }
 
   undraw() {
-    this._fill("black");
+    this._fill("white");
   }
 
   draw() {
@@ -273,7 +276,8 @@ class Piece {
   down() {
     if (this._collides(0, 1, this.pattern)) {
       console.log("bottom of floor");
-
+      this.lock();
+      this.game.piece = this.game.newPiece();
     } else {
       this.undraw();
       this.y++;
@@ -299,8 +303,15 @@ class Piece {
 
   rotate() {
     let nextpat = this.patterns[(this.patterni + 1) % this.patterns.length];
-    if (!this._collides(0, 0, nextpat)) {
+    let nudge = 0;
+
+    if (this._collides(0, 0, nextpat)) {
+      nudge = this.x > (this.game.width / 2) ? -1 : 1;
+    }
+
+    if (!this._collides(nudge, 0, nextpat)) {
       this.undraw();
+      this.x += nudge;
       this.patterni = (this.patterni + 1) % this.patterns.length;
       this.pattern = this.patterns[this.patterni];
       this.draw();
@@ -316,16 +327,14 @@ class Piece {
 
         if (this.y + iy < 0) {
           //GG
-          alert("Game Over!");
-          this.done = true;
+          this.game.done = true;
           return;
         }
 
-        this.game.board[this.y + iy][this.x + ix] = true;
+        this.game.board[this.y + iy][this.x + ix] = this.color;
       }
     }
-
-
+    this.game.removeFullLines();
   }
 
   _collides(dx, dy, pat) {
