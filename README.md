@@ -1,58 +1,71 @@
 # Tetris Party
 
-## Background
-
-### A Tetris clone with the addition of multiplayer.
-
-Tetris is a tile-matching puzzle game that involves falling tetrominos into a
-well, where the game ends when the pieces reach the top. A row is cleared out
-whenever all tiles in that row are filled up.
-
-The multiplayer component will be similar to 1 player tetris, with the addition
-that whenever one player clears out more than one row at a time, an opposing
-player will get a proportional number of additional lines at the bottom of their
-well, with a piece randomly missing. 
-
-1) There are 7 pieces that can each be rotated into 4 different positions.
-
-2) Each piece will drop down at a timed interval, that will change based on what
-level the player is on.
-
-3) Rows are cleared out when all tiles in there are being filled.
-
-4) If playing multiplayer, whenever one player clears out more than one spot at
-a time, other players will get an extra row added to the bottom of their screen.
-
-## MVP
+Link to [Tetris Party][tetrisParty]
+[tetrisParty]: http://www.akshithyellapragada.com/TetrisParty/
 
 
-This Tetris game will involve features mentioned in the rules above. 
-- [ ] Rows get cleared out as they get filled up. 
-- [ ] Varying game speeds depending on level.
-- [ ] Realtime multiplayer.
-- [ ] A production README.
+Tetris Party is a Tetris clone, where users rotate and move falling pieces so
+that they eventually fill up entire rows. Once the pieces reach the top, the
+game ends, and players can see their score.
 
-## Wireframes
+### Structure
 
-TBD.
+Tetris Party is build entirely in JavaScript and HTML5, it uses Canvas to render
+the board and pieces, and uses boolean values to efficiently store the state of
+the board. 
 
-Below the game screen there will be links to my Github and LinkedIn.
 
-## Architecture and Technologies
+### Gameplay
+![Gameplay](./gameplay.gif)
 
-JavaScript for game logic, and handling user input.
-Webpack to bundle and load js files.
-Canvas to render on the screen.
 
-## Implementation Timeline
+### Major Features
 
-**Day 1-2**. Setup all necessary modules and libraries. Get Tetris single player
-working.
+#### Efficient Storage of Game State using Booleans
 
-**Day 3-4**. Add multiplayer. 
+  The entire state of the board and color of pieces is dynamically rendered each
+  time by simply testing for truthy or falsey. Piece collision is handled by that
+  as well. 
 
-## Future Work
+#### Modular Structure
 
-- [ ] Better game room finding.
-- [ ] Special bricks and pieces that have extra effects.
-- [ ] View high scores for all players who've played the game.
+  All the pieces in the game come from one `Piece` class, but change in color and
+  pattern using a hash for efficiency and speed.
+
+
+#### Piece Nuding
+
+  Normally when pieces are at the side, they can't be rotate due to collision
+  detection. I added Nudging so that pieces just slightly bounce off the wall and
+  rotate in an intuitive manner anyway.
+
+
+  ```
+  rotate() {
+    let nextpat = this.patterns[(this.patterni + 1) % this.patterns.length];
+    let nudge = 0;
+
+    if (this._collides(0, 0, nextpat)) {
+      nudge = this.x > (this.game.width / 2) ? -1 : 1;
+    }
+
+    if (!this._collides(nudge, 0, nextpat)) {
+      this.undraw();
+      this.x += nudge;
+      this.patterni = (this.patterni + 1) % this.patterns.length;
+      this.pattern = this.patterns[this.patterni];
+      this.draw();
+    }
+  }
+
+```
+
+
+
+### Future Features
+
+#### Multiplayer
+
+My biggest end goal for this project is for two people to have the ability to
+play against each other. I want to use websockets and express to create a JS
+server for this to work. 

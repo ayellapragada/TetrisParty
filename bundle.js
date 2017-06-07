@@ -68,16 +68,34 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__piece_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__ = __webpack_require__(3);
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-class Game {
-  constructor() {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _piece = __webpack_require__(2);
+
+var _piece2 = _interopRequireDefault(_piece);
+
+var _tetrominoes = __webpack_require__(3);
+
+var Tetros = _interopRequireWildcard(_tetrominoes);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Game = function () {
+  function Game() {
+    _classCallCheck(this, Game);
 
     this.canvas = document.getElementById("board");
     this.ctx = this.canvas.getContext("2d");
@@ -100,163 +118,173 @@ class Game {
     this.drawSquare = this.drawSquare.bind(this);
     this.removeFullLines = this.removeFullLines.bind(this);
 
-    this.pieces = [
-      [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["a" /* I */], "cyan"],
-      [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["b" /* J */], "blue"],
-      [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["c" /* L */], "orange"],
-      [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["d" /* O */], "yellow"],
-      [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["e" /* S */], "green"],
-      [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["f" /* T */], "purple"],
-      [__WEBPACK_IMPORTED_MODULE_1__tetrominoes_js__["g" /* Z */], "red"] ];
+    this.pieces = [[Tetros.I, "cyan"], [Tetros.J, "blue"], [Tetros.L, "orange"], [Tetros.O, "yellow"], [Tetros.S, "green"], [Tetros.T, "purple"], [Tetros.Z, "red"]];
     document.addEventListener("keydown", this.handleKeyPress.bind(this));
   }
 
-  start() {
-    this.drawBoard();
-    this.piece = this.newPiece();
-    this.main();
-  }
-
-  newPiece() {
-    const p = this.pieces[parseInt(Math.random() * this.pieces.length, 10)];
-    return new __WEBPACK_IMPORTED_MODULE_0__piece_js__["a" /* default */](p[0], p[1], this);
-  }
-
-  main() {
-    this.now = Date.now();
-    this.delta = this.now - this.dropStart;
-    if (this.delta > 700) {
-      this.piece.down();
-      this.dropStart = this.now;
-    }
-
-    if (!this.done) {
-      requestAnimationFrame(this.main);
-    }
-
-    if (this.done) {
-      alert("Game Over!");
-    }
-  }
-
-  createEmptyBoard(height, width) {
-    this.board = [];
-    for (let row = 0; row < height; row++) {
-      this.board[row] = [];
-      for (let tile = 0; tile < width; tile++) {
-        this.board[row][tile] = false;
-      }
-    }
-  }
-
-  removeFullLines() {
-    this.nlines = 0;
-    for (let y = 0; y < this.height; y++) {
-      let line = true;
-      for (let x = 0; x < this.width; x++) {
-        line = line && this.board[y][x];
-      }
-
-      if (line) {
-        for (let y2 = y; y2 > 1; y2--) {
-          for (let x = 0; x < this.width; x++) {
-            this.board[y2][x] = this.board[y2-1][x];
-          }
-        }
-        for (let x = 0; x < this.width; x++) {
-          this.board[0][x] = false;
-        }
-        this.nlines++;
-      }
-    }
-    if (this.nlines > 0) {
-      if (this.nlines === 4) {
-        this.lines += ( this.nlines * 4 ) ;
-      } else if (this.nlines === 3) {
-        this.lines += ( this.nlines * 3 ) ;
-      } else if (this.nlines === 2) {
-        this.lines += ( this.nlines * 2 ) ;
-      } else {
-        this.lines += this.nlines;
-      }
-      this.score.textContent = "Score: " + this.lines * 50;
+  _createClass(Game, [{
+    key: 'start',
+    value: function start() {
       this.drawBoard();
+      this.piece = this.newPiece();
+      this.main();
     }
-  }
+  }, {
+    key: 'newPiece',
+    value: function newPiece() {
+      var p = this.pieces[parseInt(Math.random() * this.pieces.length, 10)];
+      return new _piece2.default(p[0], p[1], this);
+    }
+  }, {
+    key: 'main',
+    value: function main() {
+      this.now = Date.now();
+      this.delta = this.now - this.dropStart;
+      if (this.delta > 700) {
+        this.piece.down();
+        this.dropStart = this.now;
+      }
 
-  drawSquare(x, y) {
-    this.ctx.fillRect(
-      x * this.tilesz, 
-      y * this.tilesz, 
-      this.tilesz, 
-      this.tilesz);
+      if (!this.done) {
+        requestAnimationFrame(this.main);
+      }
 
-    this.ss = this.ctx.strokeStyle;
-    this.ctx.strokeStyle = "#555";
-
-    this.ctx.strokeRect(
-      x * this.tilesz, 
-      y * this.tilesz, 
-      this.tilesz, 
-      this.tilesz);
-
-    this.ctx.strokeStyle = this.ss;
-  }
-
-  drawBoard() {
-    this.fs = this.ctx.fillStyle;
-    for (let x = 0; x < this.width; x++) {
-      for (let y = 0; y < this.height; y++) {
-        this.ctx.fillStyle = this.board[y][x] || 'white';
-        this.drawSquare(x, y, this.tilesz, this.tilesz);
+      if (this.done) {
+        alert("Game Over!");
       }
     }
-    this.ctx.fillStyle = this.fs;
-  }
-
-  handleKeyPress(e) {
-    if (e.keyCode === 38) {
-      this.piece.rotate();
+  }, {
+    key: 'createEmptyBoard',
+    value: function createEmptyBoard(height, width) {
+      this.board = [];
+      for (var row = 0; row < height; row++) {
+        this.board[row] = [];
+        for (var tile = 0; tile < width; tile++) {
+          this.board[row][tile] = false;
+        }
+      }
     }
-    if (e.keyCode === 40) {
-      this.dropStart = Date.now();
-      this.piece.down();
-    }
-    if (e.keyCode === 37) {
-      this.piece.moveLeft();
-    }
-    if (e.keyCode === 39) {
-      this.piece.moveRight();
-    }
+  }, {
+    key: 'removeFullLines',
+    value: function removeFullLines() {
+      this.nlines = 0;
+      for (var y = 0; y < this.height; y++) {
+        var line = true;
+        for (var x = 0; x < this.width; x++) {
+          line = line && this.board[y][x];
+        }
 
-  }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = Game;
+        if (line) {
+          for (var y2 = y; y2 > 1; y2--) {
+            for (var _x = 0; _x < this.width; _x++) {
+              this.board[y2][_x] = this.board[y2 - 1][_x];
+            }
+          }
+          for (var _x2 = 0; _x2 < this.width; _x2++) {
+            this.board[0][_x2] = false;
+          }
+          this.nlines++;
+        }
+      }
+      if (this.nlines > 0) {
+        if (this.nlines === 4) {
+          this.lines += this.nlines * 4;
+        } else if (this.nlines === 3) {
+          this.lines += this.nlines * 3;
+        } else if (this.nlines === 2) {
+          this.lines += this.nlines * 2;
+        } else {
+          this.lines += this.nlines;
+        }
+        this.score.textContent = "Score: " + this.lines * 50;
+        this.drawBoard();
+      }
+    }
+  }, {
+    key: 'drawSquare',
+    value: function drawSquare(x, y) {
+      this.ctx.fillRect(x * this.tilesz, y * this.tilesz, this.tilesz, this.tilesz);
 
+      this.ss = this.ctx.strokeStyle;
+      this.ctx.strokeStyle = "#555";
 
+      this.ctx.strokeRect(x * this.tilesz, y * this.tilesz, this.tilesz, this.tilesz);
+
+      this.ctx.strokeStyle = this.ss;
+    }
+  }, {
+    key: 'drawBoard',
+    value: function drawBoard() {
+      this.fs = this.ctx.fillStyle;
+      for (var x = 0; x < this.width; x++) {
+        for (var y = 0; y < this.height; y++) {
+          this.ctx.fillStyle = this.board[y][x] || 'white';
+          this.drawSquare(x, y, this.tilesz, this.tilesz);
+        }
+      }
+      this.ctx.fillStyle = this.fs;
+    }
+  }, {
+    key: 'handleKeyPress',
+    value: function handleKeyPress(e) {
+      if (e.keyCode === 38) {
+        this.piece.rotate();
+      }
+      if (e.keyCode === 40) {
+        this.dropStart = Date.now();
+        this.piece.down();
+      }
+      if (e.keyCode === 37) {
+        this.piece.moveLeft();
+      }
+      if (e.keyCode === 39) {
+        this.piece.moveRight();
+      }
+    }
+  }]);
+
+  return Game;
+}();
+
+exports.default = Game;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__game__ = __webpack_require__(0);
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  const game = new __WEBPACK_IMPORTED_MODULE_0__game__["a" /* default */]();
+var _game = __webpack_require__(0);
+
+var _game2 = _interopRequireDefault(_game);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+document.addEventListener("DOMContentLoaded", function () {
+  var game = new _game2.default();
   game.start();
 });
 
-
 /***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-class Piece {
-  constructor(patterns, color, game) {
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Piece = function () {
+  function Piece(patterns, color, game) {
+    _classCallCheck(this, Piece);
+
     this.pattern = patterns[0];
     this.patterns = patterns;
     this.patterni = 0;
@@ -267,299 +295,162 @@ class Piece {
 
     this.color = color;
 
-    this.x = game.width/2 - parseInt(Math.ceil(this.pattern.length/2), 10);
+    this.x = game.width / 2 - parseInt(Math.ceil(this.pattern.length / 2), 10);
     this.y = -2;
     this.undraw = this.undraw.bind(this);
     this.draw = this.draw.bind(this);
   }
 
-  undraw() {
-    this._fill("white");
-  }
-
-  draw() {
-    this._fill(this.color);
-  }
-
-  down() {
-    if (this._collides(0, 1, this.pattern)) {
-      console.log("bottom of floor");
-      this.lock();
-      this.game.piece = this.game.newPiece();
-    } else {
-      this.undraw();
-      this.y++;
-      this.draw();
+  _createClass(Piece, [{
+    key: "undraw",
+    value: function undraw() {
+      this._fill("white");
     }
-  }
-
-  moveRight() {
-    if (!this._collides(1, 0, this.pattern)) {
-      this.undraw();
-      this.x++;
-      this.draw();
+  }, {
+    key: "draw",
+    value: function draw() {
+      this._fill(this.color);
     }
-  }
-
-  moveLeft() {
-    if (!this._collides(-1, 0, this.pattern)) {
-      this.undraw();
-      this.x--;
-      this.draw();
-    }
-  }
-
-  rotate() {
-    let nextpat = this.patterns[(this.patterni + 1) % this.patterns.length];
-    let nudge = 0;
-
-    if (this._collides(0, 0, nextpat)) {
-      nudge = this.x > (this.game.width / 2) ? -1 : 1;
-    }
-
-    if (!this._collides(nudge, 0, nextpat)) {
-      this.undraw();
-      this.x += nudge;
-      this.patterni = (this.patterni + 1) % this.patterns.length;
-      this.pattern = this.patterns[this.patterni];
-      this.draw();
-    }
-  }
-
-  lock() {
-    for (var ix = 0; ix < this.pattern.length; ix++) {
-      for (var iy = 0; iy < this.pattern.length; iy++) {
-        if (!this.pattern[ix][iy]) {
-          continue;
-        }
-
-        if (this.y + iy < 0) {
-          //GG
-          this.game.done = true;
-          return;
-        }
-
-        this.game.board[this.y + iy][this.x + ix] = this.color;
+  }, {
+    key: "down",
+    value: function down() {
+      if (this._collides(0, 1, this.pattern)) {
+        this.lock();
+        this.game.piece = this.game.newPiece();
+      } else {
+        this.undraw();
+        this.y++;
+        this.draw();
       }
     }
-    this.game.removeFullLines();
-  }
-
-  _collides(dx, dy, pat) {
-    for (let ix = 0; ix < pat.length; ix++) {
-      for (let iy = 0; iy < pat.length; iy++) {
-        if (!pat[ix][iy]) {
-          continue;
-        }
-
-        var x = this.x + ix + dx;
-        var y = this.y + iy + dy;
-
-        if (y >= this.game.height || x < 0 || x >= this.game.width) {
-          return true;
-        }
-
-        if (y < 0) {
-          continue;
-        }
-
-        if (this.game.board[y][x]) {
-          return true;
-        }
+  }, {
+    key: "moveRight",
+    value: function moveRight() {
+      if (!this._collides(1, 0, this.pattern)) {
+        this.undraw();
+        this.x++;
+        this.draw();
       }
     }
-
-    return false;
-  }
-
-  _fill(color) {
-    this.fs = this.ctx.fillStyle;
-    this.ctx.fillStyle = color;
-    for (let ix=0; ix < this.pattern.length; ix++) {
-      for (let iy = 0; iy < this.pattern.length; iy++) {
-        if (this.pattern[ix][iy]) {
-          this.drawSquare(this.x + ix, this.y + iy);
-        }
+  }, {
+    key: "moveLeft",
+    value: function moveLeft() {
+      if (!this._collides(-1, 0, this.pattern)) {
+        this.undraw();
+        this.x--;
+        this.draw();
       }
     }
-    this.ctx.fillStyle = this.fs;
-  }
+  }, {
+    key: "rotate",
+    value: function rotate() {
+      var nextpat = this.patterns[(this.patterni + 1) % this.patterns.length];
+      var nudge = 0;
 
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = Piece;
+      if (this._collides(0, 0, nextpat)) {
+        nudge = this.x > this.game.width / 2 ? -1 : 1;
+      }
 
+      if (!this._collides(nudge, 0, nextpat)) {
+        this.undraw();
+        this.x += nudge;
+        this.patterni = (this.patterni + 1) % this.patterns.length;
+        this.pattern = this.patterns[this.patterni];
+        this.draw();
+      }
+    }
+  }, {
+    key: "lock",
+    value: function lock() {
+      for (var ix = 0; ix < this.pattern.length; ix++) {
+        for (var iy = 0; iy < this.pattern.length; iy++) {
+          if (!this.pattern[ix][iy]) {
+            continue;
+          }
 
+          if (this.y + iy < 0) {
+            //GG
+            this.game.done = true;
+            return;
+          }
+
+          this.game.board[this.y + iy][this.x + ix] = this.color;
+        }
+      }
+      this.game.removeFullLines();
+    }
+  }, {
+    key: "_collides",
+    value: function _collides(dx, dy, pat) {
+      for (var ix = 0; ix < pat.length; ix++) {
+        for (var iy = 0; iy < pat.length; iy++) {
+          if (!pat[ix][iy]) {
+            continue;
+          }
+
+          var x = this.x + ix + dx;
+          var y = this.y + iy + dy;
+
+          if (y >= this.game.height || x < 0 || x >= this.game.width) {
+            return true;
+          }
+
+          if (y < 0) {
+            continue;
+          }
+
+          if (this.game.board[y][x]) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "_fill",
+    value: function _fill(color) {
+      this.fs = this.ctx.fillStyle;
+      this.ctx.fillStyle = color;
+      for (var ix = 0; ix < this.pattern.length; ix++) {
+        for (var iy = 0; iy < this.pattern.length; iy++) {
+          if (this.pattern[ix][iy]) {
+            this.drawSquare(this.x + ix, this.y + iy);
+          }
+        }
+      }
+      this.ctx.fillStyle = this.fs;
+    }
+  }]);
+
+  return Piece;
+}();
+
+exports.default = Piece;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-const I = [
-	[
-		[0, 0, 0, 0],
-		[1, 1, 1, 1],
-		[0, 0, 0, 0],
-		[0, 0, 0, 0],
-	],
-	[
-		[0, 0, 1, 0],
-		[0, 0, 1, 0],
-		[0, 0, 1, 0],
-		[0, 0, 1, 0],
-	],
-	[
-		[0, 0, 0, 0],
-		[0, 0, 0, 0],
-		[1, 1, 1, 1],
-		[0, 0, 0, 0],
-	],
-	[
-		[0, 1, 0, 0],
-		[0, 1, 0, 0],
-		[0, 1, 0, 0],
-		[0, 1, 0, 0],
-	]
-];
-/* harmony export (immutable) */ __webpack_exports__["a"] = I;
 
 
-const J = [
-	[
-		[1, 0, 0],
-		[1, 1, 1],
-		[0, 0, 0]
-	],
-	[
-		[0, 1, 1],
-		[0, 1, 0],
-		[0, 1, 0]
-	],
-	[
-		[0, 0, 0],
-		[1, 1, 1],
-		[0, 0, 1]
-	],
-	[
-		[0, 1, 0],
-		[0, 1, 0],
-		[1, 1, 0]
-	]
-];
-/* harmony export (immutable) */ __webpack_exports__["b"] = J;
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var I = exports.I = [[[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0]], [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]]];
 
+var J = exports.J = [[[1, 0, 0], [1, 1, 1], [0, 0, 0]], [[0, 1, 1], [0, 1, 0], [0, 1, 0]], [[0, 0, 0], [1, 1, 1], [0, 0, 1]], [[0, 1, 0], [0, 1, 0], [1, 1, 0]]];
 
-const L = [
-	[
-		[0, 0, 1],
-		[1, 1, 1],
-		[0, 0, 0]
-	],
-	[
-		[0, 1, 0],
-		[0, 1, 0],
-		[0, 1, 1]
-	],
-	[
-		[0, 0, 0],
-		[1, 1, 1],
-		[1, 0, 0]
-	],
-	[
-		[1, 1, 0],
-		[0, 1, 0],
-		[0, 1, 0]
-	]
-];
-/* harmony export (immutable) */ __webpack_exports__["c"] = L;
+var L = exports.L = [[[0, 0, 1], [1, 1, 1], [0, 0, 0]], [[0, 1, 0], [0, 1, 0], [0, 1, 1]], [[0, 0, 0], [1, 1, 1], [1, 0, 0]], [[1, 1, 0], [0, 1, 0], [0, 1, 0]]];
 
+var O = exports.O = [[[0, 0, 0, 0], [0, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0]]];
 
-const O = [
-	[
-		[0, 0, 0, 0],
-		[0, 1, 1, 0],
-		[0, 1, 1, 0],
-		[0, 0, 0, 0],
-	]
-];
-/* harmony export (immutable) */ __webpack_exports__["d"] = O;
+var S = exports.S = [[[0, 1, 1], [1, 1, 0], [0, 0, 0]], [[0, 1, 0], [0, 1, 1], [0, 0, 1]], [[0, 0, 0], [0, 1, 1], [1, 1, 0]], [[1, 0, 0], [1, 1, 0], [0, 1, 0]]];
 
+var T = exports.T = [[[0, 1, 0], [1, 1, 1], [0, 0, 0]], [[0, 1, 0], [0, 1, 1], [0, 1, 0]], [[0, 0, 0], [1, 1, 1], [0, 1, 0]], [[0, 1, 0], [1, 1, 0], [0, 1, 0]]];
 
-const S = [
-	[
-		[0, 1, 1],
-		[1, 1, 0],
-		[0, 0, 0]
-	],
-	[
-		[0, 1, 0],
-		[0, 1, 1],
-		[0, 0, 1]
-	],
-	[
-		[0, 0, 0],
-		[0, 1, 1],
-		[1, 1, 0]
-	],
-	[
-		[1, 0, 0],
-		[1, 1, 0],
-		[0, 1, 0]
-	]
-];
-/* harmony export (immutable) */ __webpack_exports__["e"] = S;
-
-
-const T = [
-	[
-		[0, 1, 0],
-		[1, 1, 1],
-		[0, 0, 0]
-	],
-	[
-		[0, 1, 0],
-		[0, 1, 1],
-		[0, 1, 0]
-	],
-	[
-		[0, 0, 0],
-		[1, 1, 1],
-		[0, 1, 0]
-	],
-	[
-		[0, 1, 0],
-		[1, 1, 0],
-		[0, 1, 0]
-	]
-];
-/* harmony export (immutable) */ __webpack_exports__["f"] = T;
-
-
-const Z = [
-	[
-		[1, 1, 0],
-		[0, 1, 1],
-		[0, 0, 0]
-	],
-	[
-		[0, 0, 1],
-		[0, 1, 1],
-		[0, 1, 0]
-	],
-	[
-		[0, 0, 0],
-		[1, 1, 0],
-		[0, 1, 1]
-	],
-	[
-		[0, 1, 0],
-		[1, 1, 0],
-		[1, 0, 0]
-	]
-];
-/* harmony export (immutable) */ __webpack_exports__["g"] = Z;
-
-
+var Z = exports.Z = [[[1, 1, 0], [0, 1, 1], [0, 0, 0]], [[0, 0, 1], [0, 1, 1], [0, 1, 0]], [[0, 0, 0], [1, 1, 0], [0, 1, 1]], [[0, 1, 0], [1, 1, 0], [1, 0, 0]]];
 
 /***/ })
 /******/ ]);
