@@ -1,6 +1,7 @@
 # Tetris Party
 
 Link to [Tetris Party][tetrisParty]
+
 [tetrisParty]: http://www.akshithyellapragada.com/TetrisParty/
 
 
